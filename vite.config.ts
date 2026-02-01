@@ -3,20 +3,21 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  // Set the base path for GitHub Pages
+  // Ensure the base path is used for all assets
   base: '/Fashion-Store-App/',
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      // This ensures the manifest link in HTML includes the base path
+      injectRegister: 'auto',
+      includeAssets: ['favicon.ico', 'pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
         name: 'Fashion Store Manager',
         short_name: 'BoutiqueApp',
         description: 'Manage inventory and finances for the boutique',
         theme_color: '#0F172A',
         background_color: '#ffffff',
-        display: 'standalone', // Essential for the "Desktop App" feel
+        display: 'standalone',
         scope: '/Fashion-Store-App/',
         start_url: '/Fashion-Store-App/',
         icons: [
@@ -24,7 +25,7 @@ export default defineConfig({
             src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any maskable' // Helps icons look good on all devices
+            purpose: 'any maskable'
           },
           {
             src: 'pwa-512x512.png',
@@ -33,10 +34,16 @@ export default defineConfig({
           }
         ]
       },
-      // Important for GitHub Pages deployment
       workbox: {
+        // This ensures your CSS/JS files are cached and served correctly
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         navigateFallbackDenylist: [/^\/Fashion-Store-App\/404/],
       }
     })
   ],
+  build: {
+    // Explicitly link assets to the base path
+    assetsDir: 'assets',
+    cssCodeSplit: false, // Bundles CSS into one file to prevent loading issues
+  }
 })

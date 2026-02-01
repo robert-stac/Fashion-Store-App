@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { RefreshCw, X, Download } from 'lucide-react';
+import './index.css';
 import Layout from './layouts/Layout';
 import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
