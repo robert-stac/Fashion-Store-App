@@ -9,6 +9,7 @@ import Orders from './pages/Orders';
 import Expenses from './pages/Expenses';
 import Finances from './pages/Finances';
 import Settings from './pages/Settings';
+import { InventoryProvider } from './context/InventoryContext';
 
 // --- CONFIGURATION ---
 const CURRENT_VERSION = "1.0.0"; 
@@ -109,7 +110,7 @@ function InstallPrompt() {
 
 function App() {
   return (
-    <>
+    <InventoryProvider> {/* <--- Add this wrapper around everything */}
       <UpdateNotification />
       <InstallPrompt />
       <Routes>
@@ -122,7 +123,7 @@ function App() {
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
-    </>
+    </InventoryProvider>
   );
 }
 

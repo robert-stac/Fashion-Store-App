@@ -1,16 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import './index.css'
-import { InventoryProvider } from './context/InventoryContext'
+import { BrowserRouter } from 'react-router-dom'
+
+// This automatically picks the correct base path based on your Vite config
+const baseUrl = import.meta.env.BASE_URL;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <InventoryProvider>
-      <BrowserRouter basename="/Fashion-Store-App">
-        <App />
-      </BrowserRouter>
-    </InventoryProvider>
-  </React.StrictMode>,
+    <BrowserRouter basename={baseUrl}>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
 )
