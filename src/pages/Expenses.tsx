@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useInventory, type Expense } from "../context/InventoryContext";
-import { Plus, Receipt, Trash2, Calendar } from "lucide-react";
+import { Plus, Trash2, Calendar } from "lucide-react";
 
 export default function Expenses() {
   const { expenses, addExpense, deleteExpense } = useInventory();

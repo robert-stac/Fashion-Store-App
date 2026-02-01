@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useInventory, type StockPurchase, type Withdrawal, type CapitalInjection } from "../context/InventoryContext";
-import { ShoppingCart, User, Landmark, Plus, History, Banknote, Coins, Package, TrendingUp } from "lucide-react";
+import { ShoppingCart, User, Landmark, History, Banknote, Coins, Package, TrendingUp } from "lucide-react";
 
 export default function Finances() {
   const { 

@@ -8,7 +8,7 @@ import { InventoryProvider } from './context/InventoryContext'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <InventoryProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/Fashion-Store-App">
         <App />
       </BrowserRouter>
     </InventoryProvider>
