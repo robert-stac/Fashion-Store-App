@@ -25,30 +25,26 @@ export default function Finances() {
 
   const grossProfit = orders.reduce((acc, order) => {
     const product = products.find(p => p.name === order.productName);
-    const cost = product ? product.costPrice : (order.totalAmount / order.quantity) * 0.6;
+    const cost = product ? product.costPrice : (order.totalAmount / (order.quantity || 1)) * 0.6;
     return acc + (order.totalAmount - (cost * order.quantity));
   }, 0);
 
   const netProfit = grossProfit - totalExpenses;
   const personalBalance = netProfit - totalWithdrawn;
 
-  // Capital Logic: (Revenue - Profit) + Fresh Capital - Money Spent on Stock
   const capitalToReplenish = (totalRevenue - grossProfit) + totalInjected;
   const currentCapitalBalance = capitalToReplenish - totalStockSpend;
 
-  // --- BUSINESS VALUATION ---
   const inventoryAssetValue = products.reduce((acc, p) => acc + (p.costPrice * p.quantity), 0);
   const inventoryRetailValue = products.reduce((acc, p) => acc + (p.sellPrice * p.quantity), 0);
   
-  // Total Value = Cash in Buckets + Cost Value of Stock on Racks
   const totalBusinessValue = currentCapitalBalance + inventoryAssetValue + personalBalance;
 
-  // --- HANDLERS ---
-  const handleInject = (e: React.FormEvent) => {
+  // --- HANDLERS (ID creation removed for Firebase) ---
+  const handleInject = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!injectAmount) return;
-    addInjection({
-      id: Date.now().toString(),
+    await addInjection({
       amount: Number(injectAmount),
       source: injectSource || "Owner Contribution",
       date: new Date().toLocaleDateString(),
@@ -56,11 +52,10 @@ export default function Finances() {
     setInjectAmount(""); setInjectSource("");
   };
 
-  const handleRestock = (e: React.FormEvent) => {
+  const handleRestock = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!purchaseAmount) return;
-    addStockPurchase({
-      id: Date.now().toString(),
+    await addStockPurchase({
       description: purchaseDesc || "Restock",
       amount: Number(purchaseAmount),
       date: new Date().toLocaleDateString(),
@@ -68,14 +63,13 @@ export default function Finances() {
     setPurchaseAmount(""); setPurchaseDesc("");
   };
 
-  const handleWithdraw = (e: React.FormEvent) => {
+  const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!drawAmount || Number(drawAmount) > personalBalance) {
       alert("Insufficient profit balance!");
       return;
     }
-    addWithdrawal({
-      id: Date.now().toString(),
+    await addWithdrawal({
       amount: Number(drawAmount),
       date: new Date().toLocaleDateString(),
       note: drawNote || "Personal Use",
@@ -110,7 +104,9 @@ export default function Finances() {
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Expected Revenue</p>
           <div className="flex items-center gap-3">
-            <TrendingUp size={20} className="text-emerald-500" />
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                <TrendingUp size={18} className="text-emerald-500" />
+            </div>
             <p className="text-xl font-black text-emerald-600">{inventoryRetailValue.toLocaleString()} UGX</p>
           </div>
         </div>
@@ -209,6 +205,9 @@ export default function Finances() {
               </div>
             );
           })}
+          {stockPurchases.length === 0 && withdrawals.length === 0 && injections.length === 0 && (
+             <div className="p-20 text-center text-slate-400 italic">No financial history yet.</div>
+          )}
         </div>
       </div>
     </div>

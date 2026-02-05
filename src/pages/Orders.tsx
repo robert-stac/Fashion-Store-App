@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useInventory, type Order } from "../context/InventoryContext";
+import { useInventory } from "../context/InventoryContext";
 import { Plus, Calendar, Download } from "lucide-react";
 
 export default function Orders() {
