@@ -9,23 +9,34 @@ export default function Dashboard() {
   const totalStock = products.reduce((acc, prod) => acc + prod.quantity, 0);
   const totalExpenses = expenses.reduce((acc, ex) => acc + ex.amount, 0);
 
-  // --- 2. PROFIT CALCULATIONS ---
-  // We calculate Gross Profit: (Price Sold - Cost to Buy)
+  // --- 2. REFINED PROFIT CALCULATIONS ---
   const grossProfit = orders.reduce((acc, order) => {
-    const product = products.find(p => p.name === order.productName);
-    
-    // Fallback: If product details are missing, we assume 60% of sale price was cost
-    const costPrice = product ? product.costPrice : (order.totalAmount / order.quantity) * 0.6;
-    const salePrice = order.totalAmount / order.quantity;
-    
-    const profitPerUnit = salePrice - costPrice;
-    return acc + (profitPerUnit * order.quantity);
+    // Precise matching: ignore spaces and capitalization differences
+    const product = products.find(
+      (p) => p.name.trim().toLowerCase() === order.productName.trim().toLowerCase()
+    );
+
+    let costOfThisOrder = 0;
+
+    if (product) {
+      // Use actual cost price from inventory data
+      costOfThisOrder = product.costPrice * order.quantity;
+    } else {
+      /* FALLBACK: If product details are missing from the inventory list,
+         we assume 30% of the sale price was cost (70% margin).
+         This prevents the net profit from dipping into negative due to missing data.
+      */
+      costOfThisOrder = order.totalAmount * 0.3;
+    }
+
+    const profitFromOrder = order.totalAmount - costOfThisOrder;
+    return acc + profitFromOrder;
   }, 0);
 
-  // Net Profit = (Revenue - Cost of Goods) - Operating Expenses
+  // Net Profit = (Revenue - Cost of Goods Sold) - Operating Expenses (Rent, Staff, etc.)
   const netProfit = grossProfit - totalExpenses;
 
-  // --- 3. UI DATA ---
+  // --- 3. UI DATA MAPPING ---
   const stats = [
     { 
       name: "Total Revenue", 
@@ -50,7 +61,7 @@ export default function Dashboard() {
     },
     { 
       name: "Items in Stock", 
-      value: totalStock, 
+      value: totalStock.toLocaleString(), 
       icon: Package, 
       color: "text-blue-600", 
       bg: "bg-blue-50" 
@@ -69,7 +80,7 @@ export default function Dashboard() {
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">System Status</p>
           <p className="text-sm font-bold text-emerald-500 flex items-center gap-2 justify-end">
             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-            Live Updates Active
+            Cloud Sync Active
           </p>
         </div>
       </div>

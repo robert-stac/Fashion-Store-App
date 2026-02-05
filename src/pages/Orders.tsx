@@ -17,10 +17,8 @@ export default function Orders() {
       return;
     }
 
-    // 1. Define CSV Headers
     const headers = ["Date", "Product Name", "Quantity", "Total Amount (UGX)", "Status"];
     
-    // 2. Map data to rows
     const rows = orders.map(o => [
       o.date,
       o.productName,
@@ -29,13 +27,11 @@ export default function Orders() {
       o.status
     ]);
 
-    // 3. Combine headers and rows into a string
     const csvContent = [
       headers.join(","),
       ...rows.map(row => row.join(","))
     ].join("\n");
 
-    // 4. Create the download trigger
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -46,29 +42,45 @@ export default function Orders() {
     document.body.removeChild(link);
   };
 
-  const handleSale = (e: React.FormEvent) => {
+  // --- UPDATED SALE LOGIC ---
+  const handleSale = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     const product = products.find(p => p.name === selectedProduct);
     
-    if (!product) return;
+    if (!product) {
+      alert("Please select a valid product.");
+      return;
+    }
+
     if (product.quantity < qty) {
       alert(`Not enough stock! Only ${product.quantity} left.`);
       return;
     }
 
-    const newOrder: Order = {
-      id: Date.now().toString(),
+    // Prepare the order data (Omit ID because Firebase handles it)
+    const newOrderData = {
       productName: product.name,
       quantity: qty,
       totalAmount: product.sellPrice * qty,
       date: new Date().toLocaleDateString(),
-      status: "Paid",
+      status: "Paid" as const,
     };
 
-    addOrder(newOrder);
-    setShowForm(false);
-    setSelectedProduct("");
-    setQty(1);
+    try {
+      // addOrder in Context now handles both:
+      // 1. Adding the Order record to Firebase
+      // 2. Subtracting the quantity from the Product in Firebase
+      await addOrder(newOrderData);
+      
+      // Reset Form
+      setShowForm(false);
+      setSelectedProduct("");
+      setQty(1);
+    } catch (error) {
+      console.error("Sale failed:", error);
+      alert("Something went wrong with the cloud sync. Please try again.");
+    }
   };
 
   return (
