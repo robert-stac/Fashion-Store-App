@@ -65,31 +65,51 @@ export default function Expenses() {
         </form>
       )}
 
+      {/* EXPENSES TABLE - WRAPPED FOR MOBILE SCROLLING */}
       <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
-        <table className="w-full text-left">
-          <thead className="bg-slate-50 text-slate-400 text-[10px] uppercase font-bold">
-            <tr>
-              <th className="px-8 py-5">Date</th>
-              <th className="px-6 py-5">Category</th>
-              <th className="px-6 py-5">Description</th>
-              <th className="px-6 py-5 text-right">Amount</th>
-              <th className="px-6 py-5 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {expenses.map((ex) => (
-              <tr key={ex.id}>
-                <td className="px-8 py-5 text-sm flex items-center gap-2"><Calendar size={14}/> {ex.date}</td>
-                <td className="px-6 py-5"><span className="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold">{ex.category}</span></td>
-                <td className="px-6 py-5 text-[#0F172A] font-medium">{ex.description}</td>
-                <td className="px-6 py-5 text-right font-bold text-red-500">-{ex.amount.toLocaleString()} UGX</td>
-                <td className="px-6 py-5 text-right">
-                  <button onClick={() => deleteExpense(ex.id)} className="text-slate-300 hover:text-red-500"><Trash2 size={18}/></button>
-                </td>
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left min-w-[700px]">
+            <thead className="bg-slate-50 text-slate-400 text-[10px] uppercase font-bold">
+              <tr>
+                <th className="px-8 py-5">Date</th>
+                <th className="px-6 py-5">Category</th>
+                <th className="px-6 py-5">Description</th>
+                <th className="px-6 py-5 text-right">Amount</th>
+                <th className="px-6 py-5 text-right">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {expenses.map((ex) => (
+                <tr key={ex.id} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-8 py-5 text-sm flex items-center gap-2 whitespace-nowrap text-slate-500">
+                    <Calendar size={14}/> {ex.date}
+                  </td>
+                  <td className="px-6 py-5">
+                    <span className="px-3 py-1 bg-slate-100 rounded-lg text-xs font-bold text-slate-600">
+                      {ex.category}
+                    </span>
+                  </td>
+                  <td className="px-6 py-5 text-[#0F172A] font-medium">{ex.description}</td>
+                  <td className="px-6 py-5 text-right font-bold text-red-500 whitespace-nowrap">
+                    -{ex.amount.toLocaleString()} UGX
+                  </td>
+                  <td className="px-6 py-5 text-right">
+                    <button onClick={() => deleteExpense(ex.id)} className="text-slate-300 hover:text-red-500 p-2 transition-colors">
+                      <Trash2 size={18}/>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {expenses.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="p-20 text-center text-slate-400 italic">
+                    No expenses recorded. Good job keeping costs low!
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -155,55 +155,57 @@ export default function Inventory() {
         </div>
       </div>
 
-      {/* PRODUCT TABLE */}
+      {/* PRODUCT TABLE - WRAPPED FOR MOBILE SCROLLING */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-slate-50 text-slate-400 text-[10px] uppercase tracking-widest font-bold">
-              <th className="px-8 py-5 text-center">Type</th>
-              <th className="px-6 py-5">Product Details</th>
-              <th className="px-6 py-5">Category</th>
-              <th className="px-6 py-5">Stock</th>
-              <th className="px-6 py-5">Price</th>
-              <th className="px-6 py-5 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {filteredProducts.map((p) => (
-              <tr key={p.id} className="hover:bg-slate-50/50 transition-colors group">
-                <td className="px-8 py-5">
-                  <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600 group-hover:bg-white transition-colors">
-                    {p.category === "Bags" ? <ShoppingBag size={18} /> : <Package size={18} />}
-                  </div>
-                </td>
-                <td className="px-6 py-5 font-bold text-[#0F172A]">{p.name}</td>
-                <td className="px-6 py-5 text-sm text-slate-500 font-medium">{p.category}</td>
-                <td className="px-6 py-5">
-                  <span className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1 w-fit ${p.quantity < 5 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'}`}>
-                    {p.quantity < 5 && <AlertCircle size={12} />}
-                    {p.quantity} in stock
-                  </span>
-                </td>
-                <td className="px-6 py-5 font-black text-[#0F172A]">{p.sellPrice.toLocaleString()} UGX</td>
-                <td className="px-6 py-5 text-right">
-                  <div className="flex justify-end gap-2">
-                    <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
-                      <Edit3 size={18} />
-                    </button>
-                    <button onClick={() => { if(window.confirm("Delete this item?")) deleteProduct(p.id) }} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left border-collapse min-w-[800px]">
+            <thead>
+              <tr className="bg-slate-50 text-slate-400 text-[10px] uppercase tracking-widest font-bold">
+                <th className="px-8 py-5 text-center w-20">Type</th>
+                <th className="px-6 py-5">Product Details</th>
+                <th className="px-6 py-5">Category</th>
+                <th className="px-6 py-5">Stock</th>
+                <th className="px-6 py-5">Price</th>
+                <th className="px-6 py-5 text-right">Actions</th>
               </tr>
-            ))}
-            {filteredProducts.length === 0 && (
-              <tr>
-                <td colSpan={6} className="p-20 text-center text-slate-400 italic">No products found matching your search.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filteredProducts.map((p) => (
+                <tr key={p.id} className="hover:bg-slate-50/50 transition-colors group">
+                  <td className="px-8 py-5">
+                    <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600 group-hover:bg-white transition-colors">
+                      {p.category === "Bags" ? <ShoppingBag size={18} /> : <Package size={18} />}
+                    </div>
+                  </td>
+                  <td className="px-6 py-5 font-bold text-[#0F172A]">{p.name}</td>
+                  <td className="px-6 py-5 text-sm text-slate-500 font-medium">{p.category}</td>
+                  <td className="px-6 py-5">
+                    <span className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1 w-fit ${p.quantity < 5 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'}`}>
+                      {p.quantity < 5 && <AlertCircle size={12} />}
+                      {p.quantity} in stock
+                    </span>
+                  </td>
+                  <td className="px-6 py-5 font-black text-[#0F172A]">{p.sellPrice.toLocaleString()} UGX</td>
+                  <td className="px-6 py-5 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
+                        <Edit3 size={18} />
+                      </button>
+                      <button onClick={() => { if(window.confirm("Delete this item?")) deleteProduct(p.id) }} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filteredProducts.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="p-20 text-center text-slate-400 italic">No products found matching your search.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

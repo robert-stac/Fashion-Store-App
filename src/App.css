@@ -40,3 +40,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Makes scrolling smooth on mobile */
+}
+
+/* Optional: Make the scrollbar thin and clean */
+.table-container::-webkit-scrollbar {
+  height: 4px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}

@@ -58,7 +58,6 @@ export default function Orders() {
       return;
     }
 
-    // Prepare the order data (Omit ID because Firebase handles it)
     const newOrderData = {
       productName: product.name,
       quantity: qty,
@@ -68,12 +67,7 @@ export default function Orders() {
     };
 
     try {
-      // addOrder in Context now handles both:
-      // 1. Adding the Order record to Firebase
-      // 2. Subtracting the quantity from the Product in Firebase
       await addOrder(newOrderData);
-      
-      // Reset Form
       setShowForm(false);
       setSelectedProduct("");
       setQty(1);
@@ -93,7 +87,7 @@ export default function Orders() {
         <div className="flex gap-3">
           <button 
             onClick={exportToCSV}
-            className="bg-white text-slate-700 border border-slate-200 px-5 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
+            className="hidden md:flex bg-white text-slate-700 border border-slate-200 px-5 py-3 rounded-2xl font-bold items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
           >
             <Download size={18} /> Export CSV
           </button>
@@ -143,37 +137,39 @@ export default function Orders() {
         </form>
       )}
 
-      {/* ORDERS TABLE */}
+      {/* ORDERS TABLE - WRAPPED FOR MOBILE SCROLLING */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-slate-50 text-slate-400 text-[10px] uppercase tracking-widest font-bold">
-            <tr>
-              <th className="px-8 py-5">Date</th>
-              <th className="px-6 py-5">Items</th>
-              <th className="px-6 py-5">Qty</th>
-              <th className="px-6 py-5 text-right">Total Amount</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {orders.map((order) => (
-              <tr key={order.id} className="hover:bg-slate-50 transition-colors">
-                <td className="px-8 py-5 text-sm text-slate-500 flex items-center gap-2">
-                  <Calendar size={14} /> {order.date}
-                </td>
-                <td className="px-6 py-5 font-bold text-[#0F172A]">{order.productName}</td>
-                <td className="px-6 py-5 text-slate-600">{order.quantity}</td>
-                <td className="px-6 py-5 text-right font-black text-emerald-600">
-                  {order.totalAmount.toLocaleString()} UGX
-                </td>
-              </tr>
-            ))}
-            {orders.length === 0 && (
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left min-w-[600px]">
+            <thead className="bg-slate-50 text-slate-400 text-[10px] uppercase tracking-widest font-bold">
               <tr>
-                <td colSpan={4} className="p-20 text-center text-slate-400 italic">No sales recorded yet. Start selling!</td>
+                <th className="px-8 py-5">Date</th>
+                <th className="px-6 py-5">Items</th>
+                <th className="px-6 py-5">Qty</th>
+                <th className="px-6 py-5 text-right">Total Amount</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {orders.map((order) => (
+                <tr key={order.id} className="hover:bg-slate-50 transition-colors">
+                  <td className="px-8 py-5 text-sm text-slate-500 flex items-center gap-2 whitespace-nowrap">
+                    <Calendar size={14} /> {order.date}
+                  </td>
+                  <td className="px-6 py-5 font-bold text-[#0F172A]">{order.productName}</td>
+                  <td className="px-6 py-5 text-slate-600">{order.quantity}</td>
+                  <td className="px-6 py-5 text-right font-black text-emerald-600 whitespace-nowrap">
+                    {order.totalAmount.toLocaleString()} UGX
+                  </td>
+                </tr>
+              ))}
+              {orders.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="p-20 text-center text-slate-400 italic">No sales recorded yet. Start selling!</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
