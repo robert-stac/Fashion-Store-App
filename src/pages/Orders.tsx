@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useInventory } from "../context/InventoryContext";
-import { Plus, Calendar, Download } from "lucide-react";
+import { Plus, Calendar, Download, X } from "lucide-react";
 
 export default function Orders() {
   const { products, orders, addOrder } = useInventory();
@@ -81,29 +81,37 @@ export default function Orders() {
     <div className="space-y-8 animate-in fade-in duration-700">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#0F172A]">Sales & Orders</h1>
-          <p className="text-slate-500">Record new sales and download your reports.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-[#0F172A]">Sales & Orders</h1>
+          <p className="text-slate-500 text-sm md:text-base">Record sales and download reports.</p>
         </div>
-        <div className="flex gap-3">
+        
+        {/* RESPONSIVE BUTTON GROUP */}
+        <div className="flex gap-2 md:gap-3">
+          {/* Export Button: Icon only on mobile, Full on desktop */}
           <button 
             onClick={exportToCSV}
-            className="hidden md:flex bg-white text-slate-700 border border-slate-200 px-5 py-3 rounded-2xl font-bold items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
+            className="bg-white text-slate-700 border border-slate-200 p-3 md:px-5 md:py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
+            title="Export CSV"
           >
-            <Download size={18} /> Export CSV
+            <Download size={18} /> 
+            <span className="hidden md:inline">Export CSV</span>
           </button>
+
+          {/* Record Sale Button: Shrinks on mobile */}
           <button 
             onClick={() => setShowForm(!showForm)}
-            className="bg-[#ED985F] text-[#0F172A] px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-orange-100"
+            className="bg-[#ED985F] text-[#0F172A] p-3 md:px-6 md:py-3 rounded-2xl font-bold flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-orange-100"
           >
-            <Plus size={20} /> {showForm ? "Close" : "Record a Sale"}
+            {showForm ? <X size={20} /> : <Plus size={20} />}
+            <span className="hidden md:inline">{showForm ? "Close" : "Record a Sale"}</span>
           </button>
         </div>
       </div>
 
       {/* RECORD SALE FORM */}
       {showForm && (
-        <form onSubmit={handleSale} className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl max-w-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <form onSubmit={handleSale} className="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-xl max-w-2xl animate-in zoom-in-95 duration-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-500 uppercase">Select Product</label>
               <select 
@@ -137,7 +145,7 @@ export default function Orders() {
         </form>
       )}
 
-      {/* ORDERS TABLE - WRAPPED FOR MOBILE SCROLLING */}
+      {/* ORDERS TABLE - SCROLLABLE */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left min-w-[600px]">

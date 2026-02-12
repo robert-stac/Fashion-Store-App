@@ -72,21 +72,24 @@ export default function Inventory() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#0F172A]">Inventory</h1>
-          <p className="text-slate-500">Manage your items and track stock levels.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-[#0F172A]">Inventory</h1>
+          <p className="text-slate-500 text-sm md:text-base">Manage items and track stock levels.</p>
         </div>
+        
+        {/* COMPACT BUTTON: Shrinks on mobile, full on desktop */}
         <button 
           onClick={showForm ? () => setShowForm(false) : handleAddNew}
-          className={`${showForm ? 'bg-slate-200 text-slate-700' : 'bg-[#0F172A] text-white'} px-6 py-3 rounded-2xl font-bold flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-slate-200`}
+          className={`${showForm ? 'bg-slate-200 text-slate-700' : 'bg-[#0F172A] text-white'} 
+            p-3 md:px-6 md:py-3 rounded-2xl font-bold flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-slate-200`}
         >
           {showForm ? <X size={20} /> : <Plus size={20} />}
-          {showForm ? "Cancel" : "Add Product"}
+          <span className="hidden md:inline">{showForm ? "Cancel" : "Add Product"}</span>
         </button>
       </div>
 
       {/* DYNAMIC FORM (ADD OR EDIT) */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl border-2 border-[#ED985F]/20 shadow-xl space-y-6 animate-in zoom-in-95 duration-300">
+        <form onSubmit={handleSubmit} className="bg-white p-6 md:p-8 rounded-3xl border-2 border-[#ED985F]/20 shadow-xl space-y-6 animate-in zoom-in-95 duration-300">
           <div className="flex items-center gap-2 text-[#ED985F] mb-2">
             <Edit3 size={18} />
             <span className="font-bold uppercase text-xs tracking-widest">
@@ -94,7 +97,7 @@ export default function Inventory() {
             </span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-500 uppercase">Product Name</label>
               <input required value={name} onChange={(e) => setName(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#ED985F] outline-none" />
@@ -145,7 +148,7 @@ export default function Inventory() {
           <select 
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="pl-12 pr-8 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#ED985F] shadow-sm appearance-none font-bold text-slate-600 cursor-pointer"
+            className="w-full md:w-auto pl-12 pr-8 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-[#ED985F] shadow-sm appearance-none font-bold text-slate-600 cursor-pointer"
           >
             <option value="All">All Categories</option>
             <option value="Bags">Bags</option>
@@ -185,7 +188,7 @@ export default function Inventory() {
                       {p.quantity} in stock
                     </span>
                   </td>
-                  <td className="px-6 py-5 font-black text-[#0F172A]">{p.sellPrice.toLocaleString()} UGX</td>
+                  <td className="px-6 py-5 font-black text-[#0F172A] whitespace-nowrap">{p.sellPrice.toLocaleString()} UGX</td>
                   <td className="px-6 py-5 text-right">
                     <div className="flex justify-end gap-2">
                       <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Edit">
